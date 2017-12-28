@@ -1,0 +1,14 @@
+{
+  "mongodb": {
+    "username": "<username>",
+    "password": "<password>",
+    "db": "test",
+    "clusters": [
+      "cluster0-shard-00-00-hp1fd.mongodb.net:27017",
+      "cluster0-shard-00-01-hp1fd.mongodb.net:27017",
+      "cluster0-shard-00-02-hp1fd.mongodb.net:27017"
+    ],
+    "replicaSet": "cluster0-shard-0",
+    "authSource": "admin"
+  }
+}
