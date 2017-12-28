@@ -1,3 +1,4 @@
 .project
+*.log
 /.settings
 /node_modules
