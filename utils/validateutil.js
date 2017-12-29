@@ -5,6 +5,7 @@ function validateRequired(val) {
   return true;
 };
 function validateLength(val, max, min) {
+  console.log(max + '-' + min);
   if (!val) { val = 0; }
   if (!max) { max = 999999999; }
   if (!min) { min = 0; }
@@ -30,15 +31,14 @@ ValidateBuilder.prototype.validate = function(val, pattern) {
   var _this = this;
   return new Promise(function(resolve, reject){
     if (pattern) {
-      if (pattern.required) {
-        return validateRequired(val) ? resolve(_this) : reject(new Error("required value"));
+      if (pattern.required && !validateRequired(val)) {
+        return reject(new Error("required value"));
       }
-      if (pattern.type) {
-        return validateType(val, pattern.type) ? resolve(_this) : reject(new Error("invalid type of value"));
+      if (pattern.type && !validateType(val, pattern.type)) {
+        return reject(new Error("invalid type of value"));
       }
-      if (pattern.max || pattern.min) {
-        return validateLength(val, pattern.max, pattern.min) ?
-          resolve(_this) : reject(new Error("invalid length of value"));
+      if ((pattern.max || pattern.min) && !validateLength(val, pattern.max, pattern.min)) {
+        return reject(new Error("invalid length of value"));
       }
     }
     return resolve(_this);

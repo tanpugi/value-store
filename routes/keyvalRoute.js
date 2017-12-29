@@ -34,11 +34,11 @@ router.route('/:key')
           .then(function(v) { return v.validate(key, {required: true, min: 1}); })
           .then(function(v) { return v.validate(timestamp, {type: 'number'}); })
           .then(function(v) {
-              KeyValModel
-                .findByKey(key, {timestamp: timestamp})
-                .then(successfn)
-                .catch(next);
-              }
+            KeyValModel
+              .findByKey(key, {timestamp: timestamp})
+              .then(successfn)
+              .catch(next);
+            }
           )
           .catch(function(err) {
             err.status = 400;
@@ -53,14 +53,24 @@ router.route('/')
         let timestamp = DateUtil.getUTCUnixTime();
 
         let successfn = function(val) { res.json(val); };
-        KeyValModel
-          .createNew({
-            key: key,
-            value: value,
-            timestamp: timestamp
-          })
-          .then(successfn)
-          .catch(next);
+
+        ValidateUtil.build()
+          .then(function(v) { return v.validate(key, {required: true, min: 1}); })
+          .then(function(v) {
+            KeyValModel
+              .createNew({
+                key: key,
+                value: value,
+                timestamp: timestamp
+              })
+              .then(successfn)
+              .catch(next);
+            }
+          )
+          .catch(function(err) {
+            err.status = 400;
+            next(err);
+          });
     });
 
 module.exports = router;
