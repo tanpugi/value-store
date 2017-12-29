@@ -1,4 +1,7 @@
 {
+  "server": {
+    "port": 3000
+  },
   "mongodb": {
     "username": "<username>",
     "password": "<password>",
@@ -10,5 +13,8 @@
     ],
     "replicaSet": "cluster0-shard-0",
     "authSource": "admin"
+  },
+  "logging": {
+    "outputDir": ""
   }
 }

@@ -1,4 +1,6 @@
 var mongoose = require('mongoose');
+var Promise = require("bluebird");
+
 var keyValSchema = new mongoose.Schema({
   key: String,
   value: String,
@@ -6,32 +8,38 @@ var keyValSchema = new mongoose.Schema({
 });
 
 keyValSchema.statics.findByKey =
-  function(key, filter, successfn, errorfn) {
-    let query = this.findOne({key: key});
-    if (filter && filter.timestamp) {
-        query = this.findOne({key: key, timestamp: {$lte: timestamp}});
-    }
+  function(key, filter) {
+    let _this = this;
+    return new Promise(function(resolve, reject){
+      let query = _this.findOne({key: key});
+      if (filter && filter.timestamp) {
+        query = _this.findOne({key: key, timestamp: {$lte: filter.timestamp}});
+      }
 
-    query.sort('-timestamp');
-    query.exec(function (err, keyval) {
+      query.sort('-timestamp');
+      query.exec(function (err, keyval) {
         if (err) {
-          errorfn(err);
+          reject(err);
         } else {
-          successfn(keyval);
+          resolve(keyval);
         }
       });
+    });
   }
 
 keyValSchema.statics.createNew =
-  function(keyValModel, successfn, errorfn) {
-    this.create(keyValModel,
-    function (err, keyval) {
-        if (err) {
-          errorfn(err);
-        } else {
-          successfn(keyval);
-        }
-    });
+  function(keyValModel) {
+    let _this = this;
+    return new Promise(function(resolve, reject){
+      _this.create(keyValModel,
+        function (err, keyval) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(keyval);
+          }
+        });
+      });
   }
 
 module.exports = mongoose.model('KeyVal', keyValSchema);

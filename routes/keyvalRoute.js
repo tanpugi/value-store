@@ -1,16 +1,17 @@
-var express = require('express');
-var router = express.Router();
-var mongoose = require('mongoose');
-var bodyParser = require('body-parser');
-var methodOverride = require('method-override');
+const express = require('express');
+const router = express.Router();
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const methodOverride = require('method-override');
 
-var KeyValModel = require('../model/keyval');
-var Utils = require('../utils');
+const KeyValModel = require('../model/keyval');
+const DateUtil = require('../utils/dateutil');
+const ValidateUtil = require('../utils/validateutil');
 
 router.use(bodyParser.urlencoded({ extended: true }))
 router.use(methodOverride(function(req, res){
     if (req.body && typeof req.body === 'object' && '_method' in req.body) {
-      var method = req.body._method
+      let method = req.body._method
       delete req.body._method
       return method
     }
@@ -18,25 +19,48 @@ router.use(methodOverride(function(req, res){
 
 router.route('/:key')
     .get(function(req, res, next) {
-        var key = req.params.key;
-        var timestamp = req.query.timestamp;
+        let key = req.params.key;
+        let timestamp = req.query.timestamp;
 
-        var successfn = function(val) { res.json(val); };
-        KeyValModel.findByKey(key, {timestamp: timestamp}, successfn, next);
+        let successfn = function(val) {
+          if (val) {
+            res.json(val);
+          } else {
+            next();
+          }
+        };
+
+        ValidateUtil.build()
+          .then(function(v) { return v.validate(key, {required: true, min: 1}); })
+          .then(function(v) { return v.validate(timestamp, {type: 'number'}); })
+          .then(function(v) {
+              KeyValModel
+                .findByKey(key, {timestamp: timestamp})
+                .then(successfn)
+                .catch(next);
+              }
+          )
+          .catch(function(err) {
+            err.status = 400;
+            next(err);
+          });
     });
 
 router.route('/')
     .post(function(req, res, next) {
-        var key = req.body.key;
-        var value = req.body.value;
-        var timestamp = Utils.Date.getUTCUnixTime();
+        let key = req.body.key;
+        let value = req.body.value;
+        let timestamp = DateUtil.getUTCUnixTime();
 
-        var successfn = function(val) { res.json(val); };
-        KeyValModel.createNew({
+        let successfn = function(val) { res.json(val); };
+        KeyValModel
+          .createNew({
             key: key,
             value: value,
             timestamp: timestamp
-        }, successfn, next);
+          })
+          .then(successfn)
+          .catch(next);
     });
 
 module.exports = router;
