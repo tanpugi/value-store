@@ -3,8 +3,8 @@
     "port": 3012
   },
   "mongodb": {
-    "username": "jlonceras",
-    "password": "1234",
+    "username": "",
+    "password": "",
     "db": "test",
     "clusters": [
       "cluster0-shard-00-00-hp1fd.mongodb.net:27017",
