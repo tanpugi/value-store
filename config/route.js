@@ -14,11 +14,12 @@ function reqNotFound(req, res, next) {
 };
 function reqErrorHandler(err, req, res, next) {
   res.status(err.status || 500);
+  console.log(res.statusCode);
   var isDev = process.env.NODE_ENV === 'dev';
   if (isDev) {
     res.locals.errorMessage = err.message;
     res.locals.errorStack = err;
-  } else if (res.status < 500){
+  } else if (res.statusCode < 500){
     res.locals.errorMessage = err.message;
     res.locals.errorStack = {};
   } else {
