@@ -1,10 +1,10 @@
 {
   "server": {
-    "port": 3000
+    "port": ""
   },
   "mongodb": {
-    "username": "<username>",
-    "password": "<password>",
+    "username": "jlonceras",
+    "password": "1234",
     "db": "db",
     "clusters": [
       "cluster0-shard-00-00-hp1fd.mongodb.net:27017",
