@@ -1,3 +1,7 @@
+/**
+ ** KeyValue Routing
+ ** author: https://github.com/tanpugi/
+*/
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
@@ -24,7 +28,11 @@ router.route('/:key')
 
         let successfn = function(val) {
           if (val) {
-            res.json(val);
+            res.json({
+              key: val.key,
+              value: val.value || '',
+              timestamp: val.timestamp || ''
+            });
           } else {
             next();
           }
@@ -52,7 +60,14 @@ router.route('/')
         let value = req.body.value;
         let timestamp = DateUtil.getUTCUnixTime();
 
-        let successfn = function(val) { res.json(val); };
+        let successfn = function(val) {
+          res.status(201)
+          res.json({
+            key: val.key,
+            value: val.value || '',
+            timestamp: val.timestamp || ''
+          });
+        };
 
         ValidateUtil.build()
           .then(function(v) { return v.validate(key, {required: true, min: 1}); })

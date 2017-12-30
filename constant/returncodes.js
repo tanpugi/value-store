@@ -1,3 +1,7 @@
+/**
+ ** Return code constants
+ ** author: https://github.com/tanpugi/
+*/
 module.exports = {
 	CONTINUE: 100,
 

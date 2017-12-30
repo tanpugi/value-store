@@ -1,3 +1,7 @@
+/**
+ ** Validation helpers(TODO: use express-validator instead)
+ ** author: https://github.com/tanpugi/
+*/
 var Promise = require("bluebird");
 
 function validateRequired(val) {
@@ -5,7 +9,6 @@ function validateRequired(val) {
   return true;
 };
 function validateLength(val, max, min) {
-  console.log(max + '-' + min);
   if (!val) { val = 0; }
   if (!max) { max = 999999999; }
   if (!min) { min = 0; }

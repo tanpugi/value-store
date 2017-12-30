@@ -1,3 +1,7 @@
+/**
+ ** KeyValue MongoDB Model
+ ** author: https://github.com/tanpugi/
+*/
 var mongoose = require('mongoose');
 var Promise = require("bluebird");
 

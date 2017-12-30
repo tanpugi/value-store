@@ -1,4 +1,8 @@
-var appProps = require("../app-properties.json");
+/**
+ ** General logging helper
+ ** author: https://github.com/tanpugi/
+*/
+var appProps = require("../app-properties");
 var winston = require('winston');
 var path = require('path');
 

@@ -1,11 +1,11 @@
 {
   "server": {
-    "port": 3000
+    "port": 3012
   },
   "mongodb": {
     "username": "<username>",
     "password": "<password>",
-    "db": "db",
+    "db": "test",
     "clusters": [
       "cluster0-shard-00-00-hp1fd.mongodb.net:27017",
       "cluster0-shard-00-01-hp1fd.mongodb.net:27017",

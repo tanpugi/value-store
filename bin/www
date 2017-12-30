@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 var app = require('../app');
-var appProps = require("../app-properties.json");
+var appProps = require("../app-properties");
 var logger = require("../utils/logutil");
 var http = require('http');
 
@@ -18,14 +18,24 @@ app.set('port', port);
 /**
  * Create HTTP server.
  */
-const server = http.createServer(app);
-
-/**
- * Listen on provided port, on all network interfaces.
- */
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+let appIntervalCount = 0;
+let server;
+const appInterval = setInterval(function() {
+  if (app.locals.ready || appIntervalCount > 5) {
+    /**
+     * Setting up server.
+     */
+    logger.info("Setting up server.");
+    server = http.createServer(app);
+    server.listen(port);
+    server.on('error', onError);
+    server.on('listening', onListening);
+    clearInterval(appInterval);
+    return;
+  } else {
+    appIntervalCount++;
+  }
+}, 1000);
 
 /**
  * Normalize a port into a number, string, or false.
@@ -36,11 +46,9 @@ function normalizePort(val) {
   if (isNaN(port)) {
     return val;
   }
-
   if (port >= 0) {
     return port;
   }
-
   return false;
 }
 
@@ -79,5 +87,5 @@ function onListening() {
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
-  logger.debug('Listening on ' + bind);
+  logger.info('Server started. Listening on ' + bind);
 }
